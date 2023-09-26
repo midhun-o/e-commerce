@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable no-console */
+const jwt = require('jsonwebtoken');
 const customerModel = require('../models/customer');
 
 function login(req, res) {
@@ -16,7 +17,15 @@ function login(req, res) {
             console.log(result);
             console.log(result.length);
             if (result.length === 1) {
-                res.json({ message: 'Login successful' });
+                const secretKey = '8tkdW4TkUwz0rVygja5a0Akk2j+qEC4jBWw9SYlAHrgyFUdNz3U5skn6Jdeq41yH';
+                const customer = {
+                    email: result[0].email,
+                };
+                const token = jwt.sign(customer, secretKey, { expiresIn: '1h' });
+                res.json({
+                    message: 'Login successful',
+                    token: token,
+                });
             } else {
                 res.json({ message: 'Incorrect login details' });
             }
