@@ -1,4 +1,6 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable no-console */
+
 const express = require('express');
 require('dotenv').config();
 

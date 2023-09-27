@@ -1,19 +1,30 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable no-console */
 const mysql = require('mysql');
 
-const con = mysql.createConnection({
+const dbConfig = {
     host: 'localhost',
     user: 'root',
     password: '1110',
     database: 'midhun',
-});
+};
 
-con.connect((err) => {
-    if (err) {
-        console.error('DB connection failed', err);
-    } else {
-        console.log('DB Connected');
-    }
-});
+const createConnection = () => {
+    const con = mysql.createConnection(dbConfig);
 
-module.exports = con;
+    return new Promise((resolve, reject) => {
+        con.connect((err) => {
+            if (err) {
+                console.error('DB connection failed', err);
+                reject(err);
+            } else {
+                console.log('DB Connected');
+                resolve(con);
+            }
+        });
+    });
+};
+
+module.exports = {
+    createConnection, dbConfig,
+};
