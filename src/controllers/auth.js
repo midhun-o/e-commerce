@@ -3,13 +3,13 @@
 const customerModel = require('../models/customer');
 const token = require('../common/token');
 
-function login(req, res) {
+async function login(req, res) {
     const { email, password } = req.body;
     if (!email || !password) {
         return res.status(400).res.json({ message: 'Email or Password cannot be empty' });
     }
     try {
-        const result = customerModel.login(email, password);
+        const result = await customerModel.login(email, password);
         if (result.length === 1) {
             const jwtToken = token.generateToken(result[0].email);
             res.status(200).json({ message: 'Login successful', token: jwtToken });
@@ -31,7 +31,7 @@ async function signup(req, res) {
     } else {
         try {
             await customerModel.signup(firstname, lastname, phone, email, password);
-            res.res.status(201).json({ message: 'Signup successful' });
+            res.status(201).json({ message: 'Signup successful' });
         } catch (err) {
             console.error(err);
             res.status(500).json({ error: 'Internal server error' });

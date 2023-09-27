@@ -4,12 +4,10 @@ const db = require('../../config/dbConfig');
 async function login(email, password) {
     try {
         const query = 'SELECT * FROM customer WHERE email = ? AND password = ?';
-        const values = [email, password];
-        const response = await db.query(query, values);
-        console.log(response);
+        const response = await db.query(query, [email, password]);
+        console.log(response[0]);
         return response;
     } catch (err) {
-        console.log(err);
         return false;
     }
 }
@@ -20,7 +18,6 @@ async function signup(firstname, lastname, phone, email, password) {
         const response = await db.query(query, [firstname, lastname, phone, email, password]);
         return response;
     } catch (err) {
-        console.error(err);
         return false;
     }
 }
