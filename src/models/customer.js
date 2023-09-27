@@ -1,8 +1,16 @@
+/* eslint-disable no-console */
 const db = require('../../config/dbConfig');
 
-function login(email, password, callback) {
-    const query = 'SELECT * FROM customer WHERE email = ? AND password = ?';
-    db.query(query, [email, password], callback);
+async function login(email, password) {
+    try {
+        const query = 'SELECT * FROM customer WHERE email = ? AND password = ?';
+        const response = await db.query(query, [email, password]);
+        console.log(response);
+        return response;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
 }
 
 function signup(firstname, lastname, phone, email, password, callback) {
