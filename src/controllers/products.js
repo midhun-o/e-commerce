@@ -8,9 +8,9 @@ function fetchProducts(req, res) {
             res.status(500).json({ error: 'Internal server error' });
         }
         if (result.length > 0) {
-            res.json({ products: result });
+            res.status(200).json({ products: result });
         } else {
-            res.json({ message: 'No products to display' });
+            res.status(404).json({ message: 'No products to display' });
         }
     });
 }

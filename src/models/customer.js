@@ -4,7 +4,8 @@ const db = require('../../config/dbConfig');
 async function login(email, password) {
     try {
         const query = 'SELECT * FROM customer WHERE email = ? AND password = ?';
-        const response = await db.query(query, [email, password]);
+        const values = [email, password];
+        const response = await db.query(query, values);
         console.log(response);
         return response;
     } catch (err) {
