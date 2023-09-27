@@ -3,13 +3,13 @@
 const customerModel = require('../models/customer');
 const token = require('../common/token');
 
-async function login(req, res) {
+function login(req, res) {
     const { email, password } = req.body;
     if (!email || !password) {
         return res.json({ message: 'Email or Password cannot be empty' });
     }
     try {
-        const result = await customerModel.login(email, password);
+        const result = customerModel.login(email, password);
         if (result.length === 1) {
             const jwtToken = token.generateToken(result[0].email);
             res.json({ message: 'Login successful', token: jwtToken });
