@@ -22,19 +22,20 @@ async function login(req, res) {
     }
 }
 
-function signup(req, res) {
+async function signup(req, res) {
     const {
         firstname, lastname, phone, email, password,
     } = req.body;
     if (!firstname.trim() || !lastname.trim() || !phone.trim() || !email.trim() || !password.trim()) {
         res.json({ error: 'Please fill all fields' });
     } else {
-        customerModel.signup(firstname, lastname, phone, email, password, (err) => {
-            if (err) {
-                res.status(500).json({ error: 'Internal server error' });
-            }
+        try {
+            await customerModel.signup(firstname, lastname, phone, email, password);
             res.json({ message: 'Signup successful' });
-        });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 

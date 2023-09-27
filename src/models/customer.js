@@ -13,9 +13,15 @@ async function login(email, password) {
     }
 }
 
-function signup(firstname, lastname, phone, email, password, callback) {
-    const query = 'INSERT INTO customer (first_name, last_name, phone, email, password) VALUES (?, ?, ?, ?, ?)';
-    db.query(query, [firstname, lastname, phone, email, password], callback);
+async function signup(firstname, lastname, phone, email, password) {
+    try {
+        const query = 'INSERT INTO customer (first_name, last_name, phone, email, password) VALUES (?, ?, ?, ?, ?)';
+        const response = await db.query(query, [firstname, lastname, phone, email, password]);
+        return response;
+    } catch (err) {
+        console.error(err);
+        return false;
+    }
 }
 
 module.exports = { login, signup };
