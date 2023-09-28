@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 /* eslint-disable linebreak-style */
+/* eslint-disable no-console */
 const productsModel = require('../models/products');
 
 async function fetchProducts(req, res) {
@@ -17,4 +17,20 @@ async function fetchProducts(req, res) {
     }
 }
 
-module.exports = { fetchProducts };
+async function fetchProductById(req, res) {
+    const productId = req.params.id;
+    console.log(productId);
+    try {
+        const result = await productsModel.fetchProductById(productId);
+        if (result) {
+            res.status(200).json({ product: result });
+        } else {
+            res.status(404).json({ message: 'Product not found' });
+        }
+    } catch (err) {
+        console.error('DB retrieve error', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+module.exports = { fetchProducts, fetchProductById };
