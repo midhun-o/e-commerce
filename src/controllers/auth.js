@@ -12,7 +12,7 @@ async function login(req, res) {
     try {
         const result = await customerModel.login(email, password);
         if (result.length === 1) {
-            const jwtToken = token.generateToken(result[0].email);
+            const jwtToken = token.generateToken(email);
             res.status(200).json({ message: 'Login successful', token: jwtToken });
         } else {
             res.status(401).json({ message: 'Incorrect login details' });
@@ -31,8 +31,8 @@ async function signup(req, res) {
         res.status(400).json({ error: 'Please fill all fields' });
     } else {
         try {
-            await customerModel.signup(firstname, lastname, phone, email, password);
-            res.status(201).json({ message: 'Signup successful' });
+            const result = await customerModel.signup(firstname, lastname, phone, email, password);
+            res.status(201).json({ message: result });
         } catch (err) {
             console.error(err);
             res.status(500).json({ error: 'Internal server error' });
