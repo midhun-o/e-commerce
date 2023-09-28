@@ -1,19 +1,12 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable no-console */
-const mysql = require('mysql');
+const mysql = require('mysql2/promise');
 
-const con = mysql.createConnection({
+const con = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '1110',
     database: 'midhun',
-});
-
-con.connect((err) => {
-    if (err) {
-        console.error('DB connection failed', err);
-    } else {
-        console.log('DB Connected');
-    }
 });
 
 module.exports = con;

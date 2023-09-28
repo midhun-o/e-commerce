@@ -1,13 +1,37 @@
+/* eslint-disable no-console */
+/* eslint-disable linebreak-style */
+
 const db = require('../../config/dbConfig');
 
-function login(email, password, callback) {
-    const query = 'SELECT * FROM customer WHERE email = ? AND password = ?';
-    db.query(query, [email, password], callback);
+async function login(email, password) {
+    try {
+        const query = 'SELECT id FROM customer WHERE email = ? AND password = ?';
+        const [response] = await db.query(query, [email, password]);
+        return response;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
 }
 
-function signup(firstname, lastname, phone, email, password, callback) {
-    const query = 'INSERT INTO customer (first_name, last_name, phone, email, password) VALUES (?, ?, ?, ?, ?)';
-    db.query(query, [firstname, lastname, phone, email, password], callback);
+async function signup(firstname, lastname, phone, email, password) {
+    try {
+        const checkEmail = 'SELECT id FROM customer WHERE email = ?';
+        const [emailFound] = await db.query(checkEmail, [email]);
+        const checkPhone = 'SELECT id FROM customer WHERE phone = ?';
+        const [phoneFound] = await db.query(checkPhone, [phone]);
+        if (emailFound.length > 0) {
+            return 'Email already in use';
+        }
+        if (phoneFound.length > 0) {
+            return 'Phone already in use';
+        }
+        const query = 'INSERT INTO customer (first_name, last_name, phone, email, password) VALUES (?, ?, ?, ?, ?)';
+        await db.query(query, [firstname, lastname, phone, email, password]);
+        return 'Signup Successfull';
+    } catch (err) {
+        return false;
+    }
 }
 
 module.exports = { login, signup };
