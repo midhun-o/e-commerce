@@ -1,5 +1,5 @@
-/* eslint-disable max-len */
 /* eslint-disable linebreak-style */
+/* eslint-disable max-len */
 /* eslint-disable no-console */
 const customerModel = require('../models/customer');
 const token = require('../common/token');
