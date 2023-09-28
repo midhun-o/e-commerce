@@ -7,7 +7,7 @@ const token = require('../common/token');
 async function login(req, res) {
     const { email, password } = req.body;
     if (!email || !password) {
-        return res.status(400).res.json({ message: 'Email or Password cannot be empty' });
+        return res.status(400).json({ message: 'Email or Password cannot be empty' });
     }
     try {
         const result = await customerModel.login(email, password);
