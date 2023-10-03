@@ -11,9 +11,11 @@ app.use(express.urlencoded({ extended: true }));
 
 const authRoutes = require('./routes/auth');
 const productsRoutes = require('./routes/products');
+const cartRoutes = require('./routes/cart');
 
 app.use('/auth', authRoutes);
 app.use('/products', productsRoutes);
+app.use('/cart', cartRoutes);
 
 app.listen(3001, () => {
     console.log('Server is running on port 3001');

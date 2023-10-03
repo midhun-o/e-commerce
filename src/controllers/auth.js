@@ -12,7 +12,7 @@ async function login(req, res) {
     try {
         const result = await customerModel.login(email, password);
         if (result.length === 1) {
-            const jwtToken = token.generateToken(email);
+            const jwtToken = token.generateToken(result[0].id);
             res.status(200).json({ message: 'Login successful', token: jwtToken });
         } else {
             res.status(401).json({ message: 'Incorrect login details' });
