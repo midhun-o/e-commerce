@@ -82,4 +82,45 @@ async function decrementItem(req, res) {
     }
 }
 
-module.exports = { addToCart, incrementItem, decrementItem };
+async function viewCart(req, res) {
+    try {
+        let cartTotal = 0;
+        const userId = getUserId.getUserId(req, res);
+        const result = await cartModel.viewCart(userId);
+        result.forEach((item) => {
+            cartTotal += item.price * item.quantity;
+        });
+        res.status(200).json({ cartItems: result, cartTotal: cartTotal });
+        return cartTotal;
+    } catch (err) {
+        console.error('DB retrieve error', err);
+    }
+}
+
+async function checkout(req, res) {
+    try {
+        let cartTotal = 0;
+        const userId = getUserId.getUserId(req, res);
+        const { paymentMethod } = req.body;
+        const result = await cartModel.viewCart(userId);
+        result.forEach((item) => {
+            cartTotal += item.price * item.quantity;
+        });
+        if (cartTotal > 0) {
+            const checkoutResult = await cartModel.checkout(userId, paymentMethod, cartTotal);
+            console.log(checkoutResult);
+            if (checkoutResult) {
+                await cartModel.resetCart(userId);
+                res.status(200).json({ message: 'Order placed', orderAmount: cartTotal });
+            }
+        } else {
+            res.status(200).json({ message: 'Empty cart' });
+        }
+    } catch (err) {
+        console.error('DB retrieve error', err);
+    }
+}
+
+module.exports = {
+    addToCart, incrementItem, decrementItem, viewCart, checkout,
+};

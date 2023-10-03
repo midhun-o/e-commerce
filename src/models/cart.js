@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable max-len */
 
 const db = require('../../config/dbConfig');
 
@@ -62,6 +63,40 @@ async function decrementItem(userId, productId) {
     }
 }
 
+async function viewCart(userId) {
+    try {
+        const viewCartQuery = 'SELECT p.name,ci.quantity,p.price FROM cart_items ci JOIN products p ON ci.product_id = p.id WHERE ci.cart_id = ?;        ';
+        const result = await db.query(viewCartQuery, [userId]);
+        return result[0];
+    } catch (error) {
+        return false;
+    }
+}
+
+async function checkout(userId, paymentMethod, cartTotal) {
+    try {
+        const userAddressQuery = 'SELECT address FROM customer_address WHERE customer_id = ? AND is_default = 1';
+        const result = await db.query(userAddressQuery, [userId]);
+        const [userAddress] = result;
+        const { address } = userAddress[0];
+        const insertOrderQuery = 'INSERT INTO orders (customer_id, total_price, shipping_address, payment_method) VALUES (?, ?, ?, ?)';
+        await db.query(insertOrderQuery, [userId, cartTotal, address, paymentMethod]);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+async function resetCart(userId) {
+    try {
+        const resetCartQuery = 'DELETE FROM cart_items WHERE cart_id = ?';
+        await db.query(resetCartQuery, [userId]);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
 module.exports = {
-    addToCart, isPresent, incrementItem, decrementItem, checkProductStock, getMaxLimitPerOrder,
+    addToCart, isPresent, incrementItem, decrementItem, checkProductStock, getMaxLimitPerOrder, viewCart, checkout, resetCart,
 };
