@@ -4,14 +4,18 @@
 const jwt = require('jsonwebtoken');
 
 function getUserId(req, res) {
-    const authHeader = req.headers.authorization;
-    const secretKey = process.env.JWT_SECRET_KEY;
-    if (!authHeader) {
-        res.json({ error: 'No token provided' });
-    } else {
-        const token = authHeader.split(' ')[1];
-        const userId = jwt.verify(token, secretKey);
-        return userId.id;
+    try {
+        const authHeader = req.headers.authorization;
+        const secretKey = process.env.JWT_SECRET_KEY;
+        if (!authHeader) {
+            res.json({ error: 'No token provided' });
+        } else {
+            const token = authHeader.split(' ')[1];
+            const userId = jwt.verify(token, secretKey);
+            return userId.id;
+        }
+    } catch (err) {
+        res.status(401).json({ error: 'Token verification failed' });
     }
 }
 
