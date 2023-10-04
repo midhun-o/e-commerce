@@ -5,6 +5,7 @@ const express = require('express');
 require('dotenv').config();
 
 const app = express();
+const path = require('path');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -18,6 +19,7 @@ app.use('/auth', authRoutes);
 app.use('/products', productsRoutes);
 app.use('/cart', cartRoutes);
 app.use('/admin', adminRoutes);
+app.use('/', express.static(path.join(__dirname, 'public')));
 
 app.listen(3001, () => {
     console.log('Server is running on port 3001');

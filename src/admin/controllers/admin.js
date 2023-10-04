@@ -6,9 +6,9 @@ const adminModel = require('../models/admin');
 async function addProduct(req, res) {
     try {
         const {
-            name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId,
+            name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink,
         } = req.body;
-        const result = await adminModel.addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId);
+        const result = await adminModel.addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink);
         if (result) {
             res.status(200).json({ message: 'Item added successfully' });
         } else {
