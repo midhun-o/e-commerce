@@ -26,4 +26,18 @@ async function fetchProductById(productId) {
     }
 }
 
-module.exports = { fetchProducts, fetchProductById };
+async function fetchCategoryAndProducts() {
+    const query = 'select c.name as category,p.name as product,p.description as description,pi.url as imageLink from products as p join category as c on p.category_id = c.id left join product_images as pi on p.id = pi.product_id';
+    try {
+        const [results] = await db.query(query);
+        if (results.length > 0) {
+            return results;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        return false;
+    }
+}
+
+module.exports = { fetchProducts, fetchProductById, fetchCategoryAndProducts };
