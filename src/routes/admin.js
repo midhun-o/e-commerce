@@ -4,11 +4,12 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../admin/controllers/products');
 const authController = require('../admin/controllers/auth');
-const adminMiddleware = require('../middleware/auth');
+const authMiddleware = require('../middleware/auth');
+const adminMiddleware = require('../admin/middleware/checkPermission');
 
 router.post('/login', authController.adminLogin);
-router.post('/addproduct', adminMiddleware.verifyToken, adminController.addProduct);
-router.put('/updateproducts/:id', adminMiddleware.verifyToken, adminController.updateProduct);
-router.delete('/deleteproduct/:id', adminMiddleware.verifyToken, adminController.deleteProduct);
+router.post('/addproduct', authMiddleware.verifyToken, adminMiddleware.checkAdminPermission, adminController.addProduct);
+router.put('/updateproducts/:id', authMiddleware.verifyToken, adminMiddleware.checkAdminPermission, adminController.updateProduct);
+router.delete('/deleteproduct/:id', authMiddleware.verifyToken, adminMiddleware.checkAdminPermission, adminController.deleteProduct);
 
 module.exports = router;
