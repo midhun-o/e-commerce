@@ -1,21 +1,25 @@
 /* eslint-disable linebreak-style */
 
-const db = require('../../config/dbConfig');
+const { makeDb } = require('../../config/dbConfig');
 
 async function fetchProducts() {
-    const query = 'SELECT p.name, p.price, pi.url FROM products p JOIN product_images pi ON p.id = pi.product_id';
+    const connection = await makeDb();
     try {
-        const [results] = await db.query(query);
+        const query = 'SELECT p.name, p.price, pi.url FROM products p JOIN product_images pi ON p.id = pi.product_id';
+        const [results] = await connection.query(query);
         return results;
     } catch (error) {
         return false;
+    } finally {
+        connection.end();
     }
 }
 
 async function fetchProductById(productId) {
-    const query = 'SELECT * FROM products p JOIN product_images pi ON p.id = pi.product_id WHERE p.id = ?';
+    const connection = await makeDb();
     try {
-        const [results] = await db.query(query, [productId]);
+        const query = 'SELECT * FROM products p JOIN product_images pi ON p.id = pi.product_id WHERE p.id = ?';
+        const [results] = await connection.query(query, [productId]);
         if (results.length > 0) {
             return results[0];
         } else {
@@ -23,13 +27,16 @@ async function fetchProductById(productId) {
         }
     } catch (error) {
         return false;
+    } finally {
+        connection.end();
     }
 }
 
 async function fetchCategoryAndProducts() {
-    const query = 'select c.name as category,p.name as product,p.description as description,pi.url as imageLink from products as p join category as c on p.category_id = c.id left join product_images as pi on p.id = pi.product_id';
+    const connection = await makeDb();
     try {
-        const [results] = await db.query(query);
+        const query = 'select c.name as category,p.name as product,p.description as description,pi.url as imageLink from products as p join category as c on p.category_id = c.id left join product_images as pi on p.id = pi.product_id';
+        const [results] = await connection.query(query);
         if (results.length > 0) {
             return results;
         } else {
@@ -37,6 +44,8 @@ async function fetchCategoryAndProducts() {
         }
     } catch (error) {
         return false;
+    } finally {
+        connection.end();
     }
 }
 
