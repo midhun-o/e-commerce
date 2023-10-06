@@ -12,7 +12,8 @@ function getUserId(req, res) {
         } else {
             const token = authHeader.split(' ')[1];
             const userId = jwt.verify(token, secretKey);
-            return userId.id;
+            console.log(userId);
+            return userId.id.id;
         }
     } catch (err) {
         res.status(401).json({ error: 'Token verification failed' });

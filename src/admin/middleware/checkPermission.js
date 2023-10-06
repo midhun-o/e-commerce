@@ -12,7 +12,7 @@ async function checkAdminPermission(req, res, next) {
         } else {
             const token = authHeader.split(' ')[1];
             const userDetails = jwt.verify(token, secretKey);
-            const userId = userDetails.id;
+            const userId = userDetails.id.id;
             const userRoleId = await authModel.findUserRole(userId);
             console.log(userRoleId);
             if (userRoleId === 1 || userRoleId === 2) {

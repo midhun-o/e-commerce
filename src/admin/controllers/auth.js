@@ -12,7 +12,7 @@ async function adminLogin(req, res) {
     try {
         const result = await adminModel.adminLogin(email, password);
         if (result.length === 1) {
-            const jwtToken = token.generateToken(result[0].id);
+            const jwtToken = token.generateToken(result[0]);
             res.status(200).json({ message: 'Login successful', token: jwtToken });
         } else {
             res.status(401).json({ message: 'Incorrect login details' });

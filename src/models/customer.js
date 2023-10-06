@@ -6,7 +6,7 @@ const { makeDb } = require('../../config/dbConfig');
 async function login(email, password) {
     const connection = await makeDb();
     try {
-        const query = 'SELECT id FROM customer WHERE email = ? AND password = ?';
+        const query = 'SELECT id, email FROM customer WHERE email = ? AND password = ?';
         const [response] = await connection.query(query, [email, password]);
         return response;
     } catch (err) {
