@@ -1,7 +1,32 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable no-console */
 const jwt = require('jsonwebtoken');
 const authModel = require('../models/auth');
+
+async function checkAdminAccess(req, res, next) {
+    try {
+        const authHeader = req.headers.authorization;
+        const secretKey = process.env.JWT_SECRET_KEY;
+        if (!authHeader) {
+            res.json({ error: 'No token provided' });
+        } else {
+            const token = authHeader.split(' ')[1];
+            const userDetails = jwt.verify(token, secretKey);
+            const userId = userDetails.id.id;
+            const userRoleId = await authModel.findUserRole(userId);
+            const roles = [];
+            userRoleId.forEach((item) => {
+                roles.push(item.role_id);
+            });
+            if (roles.includes(1)) {
+                next();
+            } else {
+                res.json({ error: 'You are not a admin' });
+            }
+        }
+    } catch (err) {
+        res.status(401).json({ error: 'Token verification failed' });
+    }
+}
 
 async function checkEditAccess(req, res, next) {
     try {
@@ -14,8 +39,11 @@ async function checkEditAccess(req, res, next) {
             const userDetails = jwt.verify(token, secretKey);
             const userId = userDetails.id.id;
             const userRoleId = await authModel.findUserRole(userId);
-            console.log(userRoleId);
-            if (userRoleId === 1 || userRoleId === 3) {
+            const roles = [];
+            userRoleId.forEach((item) => {
+                roles.push(item.role_id);
+            });
+            if (roles.includes(1) || roles.includes(3)) {
                 next();
             } else {
                 res.json({ error: 'You dont have access to Edit Items' });
@@ -37,8 +65,11 @@ async function checkAddAccess(req, res, next) {
             const userDetails = jwt.verify(token, secretKey);
             const userId = userDetails.id.id;
             const userRoleId = await authModel.findUserRole(userId);
-            console.log(userRoleId);
-            if (userRoleId === 1 || userRoleId === 2) {
+            const roles = [];
+            userRoleId.forEach((item) => {
+                roles.push(item.role_id);
+            });
+            if (roles.includes(1) || roles.includes(2)) {
                 next();
             } else {
                 res.json({ error: 'You dont have access to Add Items' });
@@ -60,11 +91,14 @@ async function checkDeleteAccess(req, res, next) {
             const userDetails = jwt.verify(token, secretKey);
             const userId = userDetails.id.id;
             const userRoleId = await authModel.findUserRole(userId);
-            console.log(userRoleId);
-            if (userRoleId === 1 || userRoleId === 4) {
+            const roles = [];
+            userRoleId.forEach((item) => {
+                roles.push(item.role_id);
+            });
+            if (roles.includes(1) || roles.includes(4)) {
                 next();
             } else {
-                res.json({ error: 'You dont have access to delete' });
+                res.json({ error: 'You dont have access to Delete Items' });
             }
         }
     } catch (err) {
@@ -72,4 +106,6 @@ async function checkDeleteAccess(req, res, next) {
     }
 }
 
-module.exports = { checkEditAccess, checkAddAccess, checkDeleteAccess };
+module.exports = {
+    checkAdminAccess, checkEditAccess, checkAddAccess, checkDeleteAccess,
+};

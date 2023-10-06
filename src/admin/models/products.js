@@ -1,8 +1,46 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable max-len */
-/* eslint-disable no-console */
 
 const { makeDb } = require('../../../config/dbConfig');
+
+async function viewRoles(id) {
+    const connection = await makeDb();
+    try {
+        const viewRolesQuery = 'select u.id as userId,u.username as userName, r.role_id as roleId,ur.name roleName from user u join roles r on u.id = r.user_id join user_roles ur on r.role_id = ur.id where u.id = ?';
+        const result = await connection.query(viewRolesQuery, [id]);
+        return result[0];
+    } catch (err) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
+async function addRoles(id, roleId) {
+    const connection = await makeDb();
+    try {
+        const addRolesQuery = 'INSERT INTO roles (user_id,role_id) VALUES (?, ?)';
+        await connection.query(addRolesQuery, [id, roleId]);
+        return true;
+    } catch (err) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
+async function removeRoles(id, roleId) {
+    const connection = await makeDb();
+    try {
+        const removeRolesQuery = 'DELETE FROM roles WHERE user_id = ? and role_id = ?';
+        await connection.query(removeRolesQuery, [id, roleId]);
+        return true;
+    } catch (err) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
 
 async function addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink) {
     const connection = await makeDb();
@@ -16,7 +54,6 @@ async function addProduct(name, sku, description, price, stock, maxLimitPerOrder
         await connection.query(addImageQuery, [productId, imageLink]);
         return true;
     } catch (err) {
-        console.log(err);
         return false;
     } finally {
         connection.end();
@@ -29,14 +66,12 @@ async function updateProduct(updatedDetails, productId) {
         const selectProductQuery = 'SELECT * FROM products WHERE id = ?';
         const [existingProduct] = await connection.query(selectProductQuery, [productId]);
         if (existingProduct.length === 0) {
-            console.log('Product not found');
             return false;
         }
         const updateProductsQuery = 'UPDATE products SET ? WHERE id = ?';
         await connection.query(updateProductsQuery, [updatedDetails, productId]);
         return true;
     } catch (err) {
-        console.log(err);
         return false;
     } finally {
         connection.end();
@@ -49,7 +84,6 @@ async function deleteProduct(productId) {
         const selectProductQuery = 'SELECT * FROM products WHERE id = ?';
         const [existingProduct] = await connection.query(selectProductQuery, [productId]);
         if (existingProduct.length === 0) {
-            console.log('Product not found');
             return false;
         }
         const deleteImageQuery = 'DELETE FROM product_images WHERE product_id = ?';
@@ -58,11 +92,12 @@ async function deleteProduct(productId) {
         await connection.query(deleteProductQuery, [productId]);
         return true;
     } catch (err) {
-        console.log(err);
         return false;
     } finally {
         connection.end();
     }
 }
 
-module.exports = { addProduct, updateProduct, deleteProduct };
+module.exports = {
+    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles,
+};
