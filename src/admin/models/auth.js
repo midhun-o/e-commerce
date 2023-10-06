@@ -21,9 +21,9 @@ async function adminLogin(email, password) {
 async function findUserRole(userId) {
     const connection = await makeDb();
     try {
-        const query = 'SELECT ur.id FROM user u JOIN user_roles ur ON u.role_id = ur.id WHERE u.id = ?';
+        const query = 'SELECT r.role_id FROM user u JOIN roles r ON u.id = r.user_id WHERE u.id = ?';
         const [response] = await connection.query(query, [userId]);
-        return response[0].id;
+        return response;
     } catch (err) {
         return false;
     } finally {
