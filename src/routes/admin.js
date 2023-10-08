@@ -1,18 +1,6 @@
 /* eslint-disable linebreak-style */
 const express = require('express');
-const multer = require('multer');
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'src/public/img/');
-    },
-    filename: function (req, file, cb) {
-        const fileName = Date.now() + file.originalname.replace(' ', '-');
-        cb(null, fileName);
-    },
-});
-
-const upload = multer({ storage, limits: { fileSize: 1024 * 1024 * 2 } });
+const { upload } = require('../admin/middleware/multerConfig');
 
 const router = express.Router();
 const adminController = require('../admin/controllers/products');
