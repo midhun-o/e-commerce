@@ -62,8 +62,13 @@ async function removeRoles(req, res) {
 async function addProduct(req, res) {
     try {
         const {
-            name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink,
+            name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId,
         } = req.body;
+        console.log(req.body);
+        const imageName = req.file.filename;
+        const serverURL = `${req.protocol}://${req.headers.host}`;
+        const imageLink = `${serverURL}/img/${imageName}`;
+        console.log(imageLink);
         const result = await adminModel.addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink);
         if (result) {
             res.status(200).json({ message: 'Item added successfully' });
