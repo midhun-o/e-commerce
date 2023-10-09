@@ -60,6 +60,45 @@ async function addProduct(name, sku, description, price, stock, maxLimitPerOrder
     }
 }
 
+async function addBannerImage(title, imageLink) {
+    const connection = await makeDb();
+    try {
+        const addBannerImageQuery = 'INSERT INTO banner_image (title, image_url) VALUES (?, ?)';
+        await connection.query(addBannerImageQuery, [title, imageLink]);
+        return true;
+    } catch (err) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
+async function deleteBannerImage(id) {
+    const connection = await makeDb();
+    try {
+        const deleteBannerImageQuery = 'DELETE FROM banner_image WHERE id = ?';
+        await connection.query(deleteBannerImageQuery, [id]);
+        return true;
+    } catch (err) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
+async function fetchBannerImage() {
+    const connection = await makeDb();
+    try {
+        const fetchBannerImageQuery = 'select * FROM banner_image';
+        const result = await connection.query(fetchBannerImageQuery);
+        return result;
+    } catch (err) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
 async function updateProduct(updatedDetails, productId) {
     const connection = await makeDb();
     try {
@@ -99,5 +138,5 @@ async function deleteProduct(productId) {
 }
 
 module.exports = {
-    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles,
+    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage,
 };

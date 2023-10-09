@@ -81,6 +81,55 @@ async function addProduct(req, res) {
     }
 }
 
+async function addBannerImage(req, res) {
+    try {
+        const imageName = req.file.filename;
+        const imageTitle = req.body.title;
+        const serverURL = `${req.protocol}://${req.headers.host}`;
+        const imageLink = `${serverURL}/img/banner/${imageName}`;
+        const result = await adminModel.addBannerImage(imageTitle, imageLink);
+        if (result) {
+            res.status(200).json({ message: 'Image added successfully' });
+        } else {
+            res.status(404).json({ message: 'Something went wrong' });
+        }
+    } catch (err) {
+        console.error('DB retrieve error', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+async function deleteBannerImage(req, res) {
+    try {
+        const imageId = req.params.id;
+        const result = await adminModel.deleteBannerImage(imageId);
+        if (result) {
+            res.status(200).json({ message: 'Image Deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Something went wrong' });
+        }
+    } catch (err) {
+        console.error('DB retrieve error', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+async function fetchBannerImage(req, res) {
+    try {
+        // const imageId = req.params.id;
+        const result = await adminModel.fetchBannerImage();
+        console.log(result);
+        if (result) {
+            res.status(200).json({ message: result[0] });
+        } else {
+            res.status(404).json({ message: 'Something went wrong' });
+        }
+    } catch (err) {
+        console.error('DB retrieve error', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 async function updateProduct(req, res) {
     try {
         const productId = req.params.id;
@@ -114,5 +163,5 @@ async function deleteProduct(req, res) {
 }
 
 module.exports = {
-    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles,
+    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage,
 };

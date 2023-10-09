@@ -3,19 +3,18 @@ const multer = require('multer');
 const path = require('path');
 
 const fileFilter = (req, file, cb) => {
-    const fileTypes = ['.jpg', '.jpeg'];
     const extensionName = path.extname(file.originalname).toLowerCase();
 
-    if (fileTypes.includes(extensionName)) {
+    if (extensionName === '.png') {
         cb(null, true);
     } else {
-        cb(new Error('Please upload file with jpg or jpeg format'), false);
+        cb(new Error('Please upload file with png format'), false);
     }
 };
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'src/public/img/');
+        cb(null, 'src/public/img/banner');
     },
     filename: function (req, file, cb) {
         const fileName = Date.now() + file.originalname.replace(' ', '-');
@@ -23,6 +22,6 @@ const storage = multer.diskStorage({
     },
 });
 
-const upload = multer({ storage, limits: { fileSize: 2097152 }, fileFilter });
+const bannerImageUpload = multer({ storage, limits: { fileSize: 1048576 }, fileFilter });
 
-module.exports = { upload };
+module.exports = { bannerImageUpload };
