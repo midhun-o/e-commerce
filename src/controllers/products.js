@@ -38,10 +38,10 @@ async function fetchCategoryAndProducts(req, res) {
         const result = await productsModel.fetchCategoryAndProducts();
 
         if (result.length > 0) {
+            console.log(req.url);
             const categorizedProducts = {};
             result.forEach((item) => {
                 const { category } = item;
-                console.log(category);
                 if (!categorizedProducts[category]) {
                     categorizedProducts[category] = [];
                 }
