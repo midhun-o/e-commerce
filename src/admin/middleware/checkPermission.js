@@ -7,7 +7,7 @@ async function checkAdminAccess(req, res, next) {
         const authHeader = req.headers.authorization;
         const secretKey = process.env.JWT_SECRET_KEY;
         if (!authHeader) {
-            res.json({ error: 'No token provided' });
+            res.status(401).json({ error: 'No token provided' });
         } else {
             const token = authHeader.split(' ')[1];
             const userDetails = jwt.verify(token, secretKey);
@@ -20,7 +20,7 @@ async function checkAdminAccess(req, res, next) {
             if (roles.includes(1)) {
                 next();
             } else {
-                res.json({ error: 'You are not a admin' });
+                res.status(401).json({ error: 'You are not a admin' });
             }
         }
     } catch (err) {
@@ -33,7 +33,7 @@ async function checkEditAccess(req, res, next) {
         const authHeader = req.headers.authorization;
         const secretKey = process.env.JWT_SECRET_KEY;
         if (!authHeader) {
-            res.json({ error: 'No token provided' });
+            res.status(401).json({ error: 'No token provided' });
         } else {
             const token = authHeader.split(' ')[1];
             const userDetails = jwt.verify(token, secretKey);
@@ -46,7 +46,7 @@ async function checkEditAccess(req, res, next) {
             if (roles.includes(1) || roles.includes(3)) {
                 next();
             } else {
-                res.json({ error: 'You dont have access to Edit Items' });
+                res.status(401).json({ error: 'You dont have access to Edit Items' });
             }
         }
     } catch (err) {
@@ -59,7 +59,7 @@ async function checkAddAccess(req, res, next) {
         const authHeader = req.headers.authorization;
         const secretKey = process.env.JWT_SECRET_KEY;
         if (!authHeader) {
-            res.json({ error: 'No token provided' });
+            res.status(401).json({ error: 'No token provided' });
         } else {
             const token = authHeader.split(' ')[1];
             const userDetails = jwt.verify(token, secretKey);
@@ -72,7 +72,7 @@ async function checkAddAccess(req, res, next) {
             if (roles.includes(1) || roles.includes(2)) {
                 next();
             } else {
-                res.json({ error: 'You dont have access to Add Items' });
+                res.status(401).json({ error: 'You dont have access to Add Items' });
             }
         }
     } catch (err) {
@@ -85,7 +85,7 @@ async function checkDeleteAccess(req, res, next) {
         const authHeader = req.headers.authorization;
         const secretKey = process.env.JWT_SECRET_KEY;
         if (!authHeader) {
-            res.json({ error: 'No token provided' });
+            res.status(401).json({ error: 'No token provided' });
         } else {
             const token = authHeader.split(' ')[1];
             const userDetails = jwt.verify(token, secretKey);
@@ -98,7 +98,7 @@ async function checkDeleteAccess(req, res, next) {
             if (roles.includes(1) || roles.includes(4)) {
                 next();
             } else {
-                res.json({ error: 'You dont have access to Delete Items' });
+                res.status(401).json({ error: 'You dont have access to Delete Items' });
             }
         }
     } catch (err) {

@@ -18,6 +18,7 @@ router.post('/addrole/:id', authMiddleware.verifyToken, adminMiddleware.checkAdm
 router.post('/removerole/:id', authMiddleware.verifyToken, adminMiddleware.checkAdminAccess, adminController.removeRoles);
 router.post('/addBannerImage', authMiddleware.verifyToken, adminMiddleware.checkAddAccess, bannerImageUpload.single('bannerImage'), adminController.addBannerImage);
 router.delete('/deleteBannerImage/:id', authMiddleware.verifyToken, adminMiddleware.checkDeleteAccess, adminController.deleteBannerImage);
-router.get('/fetchBannerImages', authMiddleware.verifyToken, adminMiddleware.checkAdminAccess, adminController.fetchBannerImage);
+router.get('/fetchBannerImages', adminController.fetchBannerImage);
+router.get('/fetchproduct', authMiddleware.verifyToken, adminController.fetchProducts);
 
 module.exports = router;
