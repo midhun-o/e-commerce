@@ -1,5 +1,4 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable no-console */
 
 const express = require('express');
 require('dotenv').config();
@@ -23,6 +22,4 @@ app.use('/cart', cartRoutes);
 app.use('/admin', adminRoutes);
 app.use('/', express.static(path.join(__dirname, 'public')));
 
-app.listen(PORT, () => {
-    console.log('Server is running on port 3001');
-});
+app.listen(PORT);

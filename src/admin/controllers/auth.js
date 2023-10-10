@@ -1,6 +1,5 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable max-len */
-/* eslint-disable no-console */
 const adminModel = require('../models/auth');
 const token = require('../../common/token');
 
@@ -18,7 +17,6 @@ async function adminLogin(req, res) {
             res.status(401).json({ message: 'Incorrect login details' });
         }
     } catch (err) {
-        console.error(err);
         res.status(500).json({ error: 'Database error' });
     }
 }

@@ -1,5 +1,4 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable no-console */
 const productsModel = require('../models/products');
 
 async function fetchProducts(req, res) {
@@ -12,14 +11,12 @@ async function fetchProducts(req, res) {
             res.status(404).json({ message: 'No products to display' });
         }
     } catch (err) {
-        console.error('DB retrieve error', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 }
 
 async function fetchProductById(req, res) {
     const productId = req.params.id;
-    console.log(productId);
     try {
         const result = await productsModel.fetchProductById(productId);
         if (result) {
@@ -28,7 +25,6 @@ async function fetchProductById(req, res) {
             res.status(404).json({ message: 'Product not found' });
         }
     } catch (err) {
-        console.error('DB retrieve error', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 }
@@ -38,7 +34,6 @@ async function fetchCategoryAndProducts(req, res) {
         const result = await productsModel.fetchCategoryAndProducts();
 
         if (result.length > 0) {
-            console.log(req.url);
             const categorizedProducts = {};
             result.forEach((item) => {
                 const { category } = item;
@@ -53,7 +48,6 @@ async function fetchCategoryAndProducts(req, res) {
             res.status(404).json({ message: 'No products to display' });
         }
     } catch (err) {
-        console.error('DB retrieve error', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 }

@@ -137,6 +137,19 @@ async function deleteProduct(productId) {
     }
 }
 
+async function fetchProducts() {
+    const connection = await makeDb();
+    try {
+        const query = 'SELECT p.id AS id,pi.url AS image,p.name AS name,p.sku AS sku,c.name AS category,p.price AS price,p.stock AS stock,p.status AS status,p.max_limit_per_order AS maxLimit,p.discount AS discount,s.name AS seller,CONCAT_WS(" ",DAY(p.created),MONTHNAME(p.created),YEAR(p.created)) AS addedDate FROM products p JOIN product_images pi ON p.id = pi.product_id JOIN category c on c.id = p.category_id JOIN seller s ON p.seller_id = s.id';
+        const [results] = await connection.query(query);
+        return results;
+    } catch (error) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
 module.exports = {
-    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage,
+    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage, fetchProducts,
 };

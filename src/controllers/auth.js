@@ -1,6 +1,5 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable max-len */
-/* eslint-disable no-console */
 const customerModel = require('../models/customer');
 const token = require('../common/token');
 
@@ -13,13 +12,11 @@ async function login(req, res) {
         const result = await customerModel.login(email, password);
         if (result.length === 1) {
             const jwtToken = token.generateToken(result[0]);
-            console.log(result[0]);
             res.status(200).json({ message: 'Login successful', token: jwtToken });
         } else {
             res.status(401).json({ message: 'Incorrect login details' });
         }
     } catch (err) {
-        console.error(err);
         res.status(500).json({ error: 'Database error' });
     }
 }
@@ -33,9 +30,16 @@ async function signup(req, res) {
     } else {
         try {
             const result = await customerModel.signup(firstname, lastname, phone, email, password);
-            res.status(201).json({ message: result });
+            if (result.length > 0) {
+                if (result[0].email === email) {
+                    res.status(401).json({ message: 'Email already picked' });
+                } else {
+                    res.status(401).json({ message: 'Phone number already picked' });
+                }
+            } else {
+                res.status(201).json({ message: 'User registered successfully' });
+            }
         } catch (err) {
-            console.error(err);
             res.status(500).json({ error: 'Internal server error' });
         }
     }
