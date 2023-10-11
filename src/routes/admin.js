@@ -18,6 +18,6 @@ router.post('/removerole/:id', authMiddleware.verifyToken, adminController.remov
 router.post('/addBannerImage', authMiddleware.verifyToken, bannerImageUpload.single('bannerImage'), adminController.addBannerImage);
 router.delete('/deleteBannerImage/:id', authMiddleware.verifyToken, adminController.deleteBannerImage);
 router.get('/fetchBannerImages', adminController.fetchBannerImage);
-router.get('/fetchproduct', authMiddleware.verifyToken, adminController.fetchProducts);
+router.get('/fetchproduct/', authMiddleware.verifyToken, adminController.fetchProducts);
 
 module.exports = router;

@@ -2,11 +2,12 @@
 
 const { makeDb } = require('../../config/dbConfig');
 
-async function fetchProducts() {
+async function fetchProducts(page) {
     const connection = await makeDb();
     try {
-        const query = 'SELECT p.name, p.price, pi.url FROM products p JOIN product_images pi ON p.id = pi.product_id';
-        const [results] = await connection.query(query);
+        const fetchSkip = page * 10;
+        const query = 'SELECT p.name, p.price, pi.url FROM products p JOIN product_images pi ON p.id = pi.product_id limit ?,?';
+        const [results] = await connection.query(query, [fetchSkip, 10]);
         return results;
     } catch (error) {
         return false;

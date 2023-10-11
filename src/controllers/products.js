@@ -3,8 +3,8 @@ const productsModel = require('../models/products');
 
 async function fetchProducts(req, res) {
     try {
-        const result = await productsModel.fetchProducts();
-
+        const pageNumber = req.query.page;
+        const result = await productsModel.fetchProducts(pageNumber);
         if (result.length > 0) {
             res.status(200).json({ products: result });
         } else {
@@ -16,8 +16,8 @@ async function fetchProducts(req, res) {
 }
 
 async function fetchProductById(req, res) {
-    const productId = req.params.id;
     try {
+        const productId = req.params.id;
         const result = await productsModel.fetchProductById(productId);
         if (result) {
             res.status(200).json({ product: result });
@@ -32,7 +32,6 @@ async function fetchProductById(req, res) {
 async function fetchCategoryAndProducts(req, res) {
     try {
         const result = await productsModel.fetchCategoryAndProducts();
-
         if (result.length > 0) {
             const categorizedProducts = {};
             result.forEach((item) => {
