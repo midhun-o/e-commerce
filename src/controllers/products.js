@@ -5,11 +5,7 @@ async function fetchProducts(req, res) {
     try {
         const pageNumber = req.query.page;
         const result = await productsModel.fetchProducts(pageNumber);
-        if (result.length > 0) {
-            res.status(200).json({ products: result });
-        } else {
-            res.status(404).json({ message: 'No products to display' });
-        }
+        res.status(200).json({ products: result });
     } catch (err) {
         res.status(500).json({ error: 'Internal server error' });
     }

@@ -191,11 +191,7 @@ async function fetchProducts(req, res) {
         if (roles.includes(1) || roles.includes(2) || roles.includes(3) || roles.includes(4)) {
             const pageNumber = req.query.page;
             const result = await adminModel.fetchProducts(pageNumber);
-            if (result.length > 0) {
-                res.status(200).json({ products: result });
-            } else {
-                res.status(404).json({ message: 'No products to display' });
-            }
+            res.status(200).json({ products: result });
         } else {
             res.status(401).json({ error: 'You dont have access' });
         }
