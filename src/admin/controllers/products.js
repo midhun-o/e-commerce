@@ -189,7 +189,8 @@ async function fetchProducts(req, res) {
     try {
         const roles = await adminMiddleware.fetchRoles(req, res);
         if (roles.includes(1) || roles.includes(2) || roles.includes(3) || roles.includes(4)) {
-            const result = await adminModel.fetchProducts();
+            const pageNumber = req.query.page;
+            const result = await adminModel.fetchProducts(pageNumber);
             if (result.length > 0) {
                 res.status(200).json({ products: result });
             } else {
