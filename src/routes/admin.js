@@ -1,6 +1,7 @@
 /* eslint-disable linebreak-style */
 const express = require('express');
 const { productImageUpload } = require('../admin/middleware/productImageConfig');
+const { productDetailsUpload } = require('../admin/middleware/productExcelConfig');
 const { bannerImageUpload } = require('../admin/middleware/bannerImageConfig');
 
 const router = express.Router();
@@ -20,5 +21,6 @@ router.post('/addBannerImage', authMiddleware.verifyToken, adminMiddleware.fetch
 router.delete('/deleteBannerImage/:id', authMiddleware.verifyToken, adminMiddleware.fetchRoles(1), adminController.deleteBannerImage);
 router.get('/fetchBannerImages', adminController.fetchBannerImage);
 router.get('/fetchproduct/', authMiddleware.verifyToken, adminController.fetchProducts);
+router.post('/addproductexcel', authMiddleware.verifyToken, adminMiddleware.fetchRoles(2), productDetailsUpload.single('productDetails'), adminController.addProductFromExcel);
 
 module.exports = router;

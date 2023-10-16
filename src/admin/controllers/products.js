@@ -1,5 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable max-len */
+const xlsx = require('xlsx');
 const adminModel = require('../models/products');
 
 async function viewRoles(req, res) {
@@ -154,6 +155,31 @@ async function fetchProducts(req, res) {
     }
 }
 
+async function addProductFromExcel(req, res) {
+    try {
+        const fileLink = req.file.path;
+        const workbook = xlsx.readFile(fileLink);
+        const sheetNameList = workbook.SheetNames;
+        const jsonData = xlsx.utils.sheet_to_json(
+            workbook.Sheets[sheetNameList],
+        );
+        jsonData.forEach(async (item) => {
+            const {
+                name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageName,
+            } = item;
+            const imageLink = `img/${imageName}`;
+            const result = await adminModel.addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink);
+            if (result) {
+                res.status(200).json({ message: 'Items added successfully' });
+            } else {
+                res.status(404).json({ message: 'Something went wrong' });
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 module.exports = {
-    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage, fetchProducts,
+    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage, fetchProducts, addProductFromExcel,
 };
