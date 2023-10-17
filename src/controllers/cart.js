@@ -1,7 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable max-len */
 const cartModel = require('../models/cart');
-const getUserId = require('../common/getUserId');
 
 async function isPresent(userId, productId) {
     try {
@@ -15,7 +14,7 @@ async function isPresent(userId, productId) {
 async function addToCart(req, res) {
     try {
         const productId = req.params.id;
-        const userId = getUserId.getUserId(req, res);
+        const { userId } = req;
         const isPresentInCart = await isPresent(userId, productId);
         if (isPresentInCart.length === 0) {
             const result = await cartModel.addToCart(userId, productId);
@@ -35,7 +34,7 @@ async function addToCart(req, res) {
 async function incrementItem(req, res) {
     try {
         const productId = req.params.id;
-        const userId = getUserId.getUserId(req, res);
+        const { userId } = req;
         const isPresentInCart = await isPresent(userId, productId);
         const itemQuantity = isPresentInCart[0].quantity;
         const [maxLimitPerOrder] = await cartModel.getMaxLimitPerOrder(productId);
@@ -58,7 +57,7 @@ async function incrementItem(req, res) {
 async function decrementItem(req, res) {
     try {
         const productId = req.params.id;
-        const userId = getUserId.getUserId(req, res);
+        const { userId } = req;
         const isPresentInCart = await isPresent(userId, productId);
         const itemQuantity = isPresentInCart[0].quantity;
         if (isPresentInCart.length > 0 && itemQuantity > 1) {
@@ -79,7 +78,7 @@ async function decrementItem(req, res) {
 async function viewCart(req, res) {
     try {
         let cartTotal = 0;
-        const userId = getUserId.getUserId(req, res);
+        const { userId } = req;
         const result = await cartModel.viewCart(userId);
         result.forEach((item) => {
             cartTotal += item.price * item.quantity;
@@ -94,7 +93,7 @@ async function viewCart(req, res) {
 async function checkout(req, res) {
     try {
         let cartTotal = 0;
-        const userId = getUserId.getUserId(req, res);
+        const { userId } = req;
         const { paymentMethod } = req.body;
         const result = await cartModel.viewCart(userId);
         result.forEach((item) => {
