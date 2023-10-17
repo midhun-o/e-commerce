@@ -168,13 +168,9 @@ async function addProductFromExcel(req, res) {
                 name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageName,
             } = item;
             const imageLink = `img/${imageName}`;
-            const result = await adminModel.addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink);
-            if (result) {
-                res.status(200).json({ message: 'Items added successfully' });
-            } else {
-                res.status(404).json({ message: 'Something went wrong' });
-            }
+            await adminModel.addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink);
         });
+        res.status(200).json({ message: 'Items added successfully' });
     } catch (err) {
         res.status(500).json({ error: 'Internal server error' });
     }
