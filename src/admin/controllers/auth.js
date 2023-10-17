@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable max-len */
 const adminModel = require('../models/auth');
-const token = require('../../common/token');
+const token = require('../../common/helper');
 
 async function adminLogin(req, res) {
     const { email, password } = req.body;

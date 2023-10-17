@@ -9,13 +9,18 @@ function verifyToken(req, res, next) {
         res.status(401).json({ error: 'No token provided' });
     } else {
         const token = authHeader.split(' ')[1];
-        jwt.verify(token, secretKey, (err) => {
+        const userData = jwt.verify(token, secretKey, (err, data) => {
             if (err) {
                 res.status(401).json({ error: 'Wrong Token' });
             } else {
-                next();
+                return data;
             }
         });
+        if (userData) {
+            const userId = userData.id.id;
+            req.userId = userId;
+            next();
+        }
     }
 }
 

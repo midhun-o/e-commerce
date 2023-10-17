@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable max-len */
 const customerModel = require('../models/customer');
-const token = require('../common/token');
+const token = require('../common/helper');
 
 async function login(req, res) {
     const { email, password } = req.body;
