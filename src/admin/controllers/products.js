@@ -176,6 +176,30 @@ async function addProductFromExcel(req, res) {
     }
 }
 
+async function addUser(req, res) {
+    const {
+        username, password, email,
+    } = req.body;
+    if (!username.trim() || !password.trim() || !email.trim()) {
+        res.status(400).json({ error: 'Please fill all fields' });
+    } else {
+        try {
+            const result = await adminModel.addUser(username, password, email);
+            if (result.length > 0) {
+                if (result[0].email === email) {
+                    res.status(401).json({ message: 'Email already picked' });
+                } else {
+                    res.status(401).json({ message: 'Username already picked' });
+                }
+            } else {
+                res.status(201).json({ message: 'User registered successfully' });
+            }
+        } catch (err) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+}
+
 module.exports = {
-    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage, fetchProducts, addProductFromExcel,
+    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage, fetchProducts, addProductFromExcel, addUser,
 };

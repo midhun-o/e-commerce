@@ -151,6 +151,24 @@ async function fetchProducts(pageNumber) {
     }
 }
 
+async function addUser(username, password, email) {
+    const connection = await makeDb();
+    try {
+        const check = 'SELECT email,username FROM user WHERE email = ? or username = ?';
+        const [result] = await connection.query(check, [email, username]);
+        if (result.length > 0) {
+            return result;
+        }
+        const query = 'INSERT INTO user (username, password, email) VALUES (?, ?, ?)';
+        await connection.query(query, [username, password, email]);
+        return result;
+    } catch (err) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
 module.exports = {
-    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage, fetchProducts,
+    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage, fetchProducts, addUser,
 };
