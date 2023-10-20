@@ -22,5 +22,6 @@ router.delete('/deleteBannerImage/:id', authMiddleware.verifyToken, adminMiddlew
 router.get('/fetchBannerImages', adminController.fetchBannerImage);
 router.get('/fetchproduct/', authMiddleware.verifyToken, adminController.fetchProducts);
 router.post('/addproductexcel', authMiddleware.verifyToken, adminMiddleware.fetchRoles(2), productDetailsUpload.single('productDetails'), adminController.addProductFromExcel);
+router.post('/adduser', authMiddleware.verifyToken, adminMiddleware.fetchRoles(1), adminController.addUser);
 
 module.exports = router;

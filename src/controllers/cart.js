@@ -19,15 +19,15 @@ async function addToCart(req, res) {
         if (isPresentInCart.length === 0) {
             const result = await cartModel.addToCart(userId, productId);
             if (result) {
-                res.status(200).json({ message: result });
+                res.status(200).json({ success: true, message: result });
             } else {
-                res.status(404).json({ message: 'Error' });
+                res.status(404).json({ success: false, message: 'Error' });
             }
         } else if (isPresentInCart.length > 0) {
-            res.status(200).json({ message: 'Item already in your cart' });
+            res.status(200).json({ success: false, message: 'Item already in your cart' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -42,15 +42,15 @@ async function incrementItem(req, res) {
         if (isPresentInCart.length > 0 && itemQuantity < maxLimitPerOrder.max_limit_per_order && itemQuantity < productStock.stock) {
             const result = await cartModel.incrementItem(userId, productId);
             if (result) {
-                res.status(200).json({ message: result });
+                res.status(200).json({ success: true, message: result });
             } else {
-                res.status(404).json({ message: 'Error' });
+                res.status(404).json({ success: false, message: 'Error' });
             }
         } else {
-            res.status(200).json({ message: 'Maximum limit reached' });
+            res.status(200).json({ success: false, message: 'Maximum limit reached' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -63,15 +63,15 @@ async function decrementItem(req, res) {
         if (isPresentInCart.length > 0 && itemQuantity > 1) {
             const result = await cartModel.decrementItem(userId, productId);
             if (result) {
-                res.status(200).json({ message: result });
+                res.status(200).json({ success: true, message: result });
             } else {
-                res.status(404).json({ message: 'Error' });
+                res.status(404).json({ success: false, message: 'Error' });
             }
         } else {
-            res.status(200).json({ message: 'Minimum limit reached' });
+            res.status(200).json({ success: false, message: 'Minimum limit reached' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -83,10 +83,10 @@ async function viewCart(req, res) {
         result.forEach((item) => {
             cartTotal += item.price * item.quantity;
         });
-        res.status(200).json({ cartItems: result, cartTotal: cartTotal });
+        res.status(200).json({ success: true, cartItems: result, cartTotal: cartTotal });
         return cartTotal;
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -103,13 +103,13 @@ async function checkout(req, res) {
             const checkoutResult = await cartModel.checkout(userId, paymentMethod, cartTotal);
             if (checkoutResult) {
                 await cartModel.resetCart(userId);
-                res.status(200).json({ message: 'Order placed', orderAmount: cartTotal });
+                res.status(200).json({ success: true, message: 'Order placed', orderAmount: cartTotal });
             }
         } else {
-            res.status(200).json({ message: 'Empty cart' });
+            res.status(200).json({ success: false, message: 'Empty cart' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 

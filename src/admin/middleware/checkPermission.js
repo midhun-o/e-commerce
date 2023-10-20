@@ -12,10 +12,10 @@ function fetchRoles(requiredRole) {
             if (roles.includes(requiredRole) || roles.includes(1)) {
                 next();
             } else {
-                res.status(401).json({ error: 'You dont have access' });
+                res.status(401).json({ success: false, error: 'You dont have access' });
             }
         } catch (err) {
-            res.status(401).json({ error: 'Token verification failed' });
+            res.status(401).json({ success: false, error: 'Token verification failed' });
         }
     };
 }
