@@ -8,12 +8,12 @@ async function viewRoles(req, res) {
         const { id } = req.params;
         const result = await adminModel.viewRoles(id);
         if (result) {
-            res.status(200).json({ roles: result });
+            res.status(200).json({ success: true, roles: result });
         } else {
-            res.status(404).json({ message: 'Something went wrong' });
+            res.status(404).json({ success: false, message: 'Something went wrong' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -24,15 +24,15 @@ async function addRoles(req, res) {
         if (roleId > 0 && roleId < 5) {
             const result = await adminModel.addRoles(id, roleId);
             if (result) {
-                res.status(200).json({ message: 'Role added' });
+                res.status(200).json({ success: true, message: 'Role added' });
             } else {
-                res.status(404).json({ message: 'Something went wrong' });
+                res.status(404).json({ success: false, message: 'Something went wrong' });
             }
         } else {
-            res.status(404).json({ message: 'RoleId should be between 1 - 4' });
+            res.status(404).json({ success: false, message: 'RoleId should be between 1 - 4' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -43,15 +43,15 @@ async function removeRoles(req, res) {
         if (roleId > 0 && roleId < 5) {
             const result = await adminModel.removeRoles(id, roleId);
             if (result) {
-                res.status(200).json({ message: 'Role removed' });
+                res.status(200).json({ success: true, message: 'Role removed' });
             } else {
-                res.status(404).json({ message: 'Something went wrong' });
+                res.status(404).json({ success: false, message: 'Something went wrong' });
             }
         } else {
-            res.status(404).json({ message: 'RoleId should be between 1 - 4' });
+            res.status(404).json({ success: false, message: 'RoleId should be between 1 - 4' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -64,12 +64,12 @@ async function addProduct(req, res) {
         const imageLink = `/img/${imageName}`;
         const result = await adminModel.addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink);
         if (result) {
-            res.status(200).json({ message: 'Item added successfully' });
+            res.status(200).json({ success: true, message: 'Item added successfully' });
         } else {
-            res.status(404).json({ message: 'Something went wrong' });
+            res.status(404).json({ success: false, message: 'Something went wrong' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -80,12 +80,12 @@ async function addBannerImage(req, res) {
         const imageLink = `/img/banner/${imageName}`;
         const result = await adminModel.addBannerImage(imageTitle, imageLink);
         if (result) {
-            res.status(200).json({ message: 'Image added successfully' });
+            res.status(200).json({ success: true, message: 'Image added successfully' });
         } else {
-            res.status(404).json({ message: 'Something went wrong' });
+            res.status(404).json({ success: false, message: 'Something went wrong' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -94,12 +94,12 @@ async function deleteBannerImage(req, res) {
         const imageId = req.params.id;
         const result = await adminModel.deleteBannerImage(imageId);
         if (result) {
-            res.status(200).json({ message: 'Image Deleted successfully' });
+            res.status(200).json({ success: true, message: 'Image Deleted successfully' });
         } else {
-            res.status(404).json({ message: 'Something went wrong' });
+            res.status(404).json({ success: false, message: 'Something went wrong' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -107,12 +107,12 @@ async function fetchBannerImage(req, res) {
     try {
         const result = await adminModel.fetchBannerImage();
         if (result) {
-            res.status(200).json({ message: result[0] });
+            res.status(200).json({ success: true, message: result[0] });
         } else {
-            res.status(404).json({ message: 'Something went wrong' });
+            res.status(404).json({ success: false, message: 'Something went wrong' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -122,12 +122,12 @@ async function updateProduct(req, res) {
         const updatedDetails = req.body;
         const result = await adminModel.updateProduct(updatedDetails, productId);
         if (result) {
-            res.status(200).json({ message: 'Item updated successfully' });
+            res.status(200).json({ success: true, message: 'Item updated successfully' });
         } else {
-            res.status(404).json({ message: 'Something went wrong' });
+            res.status(404).json({ success: false, message: 'Something went wrong' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -136,12 +136,12 @@ async function deleteProduct(req, res) {
         const productId = req.params.id;
         const result = await adminModel.deleteProduct(productId);
         if (result) {
-            res.status(200).json({ message: 'Item deleted successfully' });
+            res.status(200).json({ success: true, message: 'Item deleted successfully' });
         } else {
-            res.status(404).json({ message: 'Something went wrong' });
+            res.status(404).json({ success: false, message: 'Something went wrong' });
         }
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -149,9 +149,9 @@ async function fetchProducts(req, res) {
     try {
         const pageNumber = req.query.page;
         const result = await adminModel.fetchProducts(pageNumber);
-        res.status(200).json({ products: result });
+        res.status(200).json({ success: true, products: result });
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -170,9 +170,9 @@ async function addProductFromExcel(req, res) {
             const imageLink = `img/${imageName}`;
             await adminModel.addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink);
         });
-        res.status(200).json({ message: 'Items added successfully' });
+        res.status(200).json({ success: true, message: 'Items added successfully' });
     } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 }
 
@@ -187,15 +187,15 @@ async function addUser(req, res) {
             const result = await adminModel.addUser(username, password, email);
             if (result.length > 0) {
                 if (result[0].email === email) {
-                    res.status(401).json({ message: 'Email already picked' });
+                    res.status(401).json({ success: false, message: 'Email already picked' });
                 } else {
-                    res.status(401).json({ message: 'Username already picked' });
+                    res.status(401).json({ success: false, message: 'Username already picked' });
                 }
             } else {
-                res.status(201).json({ message: 'User registered successfully' });
+                res.status(201).json({ success: true, message: 'User registered successfully' });
             }
         } catch (err) {
-            res.status(500).json({ error: 'Internal server error' });
+            res.status(500).json({ success: false, error: 'Internal server error' });
         }
     }
 }
