@@ -1,5 +1,4 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable max-len */
 
 const { makeDb } = require('../../../config/dbConfig');
 
@@ -29,4 +28,7 @@ async function findUserRole(userId) {
     }
 }
 
-module.exports = { adminLogin, findUserRole };
+module.exports = {
+    adminLogin,
+    findUserRole,
+};

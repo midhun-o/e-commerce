@@ -1,6 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable max-len */
-const customerModel = require('../models/customer');
+const customerModel = require('../models/auth');
 const token = require('../common/helper');
 
 async function login(req, res) {
