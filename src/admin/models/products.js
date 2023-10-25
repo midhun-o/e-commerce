@@ -42,9 +42,10 @@ async function removeRoles(id, roleId) {
     }
 }
 
-async function addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink) {
+async function addProduct(productsDetails) {
     const connection = await makeDb();
     try {
+        const [name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink] = productsDetails;
         const addProductsQuery = 'INSERT INTO products (name, sku, description, price, stock, max_limit_per_order, category_id, discount, seller_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
         await connection.query(addProductsQuery, [name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId]);
         const query = 'SELECT id FROM products WHERE sku = ?';
