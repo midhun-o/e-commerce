@@ -62,7 +62,8 @@ async function addProduct(req, res) {
         } = req.body;
         const imageName = req.file.filename;
         const imageLink = `/img/${imageName}`;
-        const result = await adminModel.addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink);
+        const productsDetails = [name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink];
+        const result = await adminModel.addProduct(productsDetails);
         if (result) {
             res.status(200).json({ success: true, message: 'Item added successfully' });
         } else {
@@ -163,12 +164,16 @@ async function addProductFromExcel(req, res) {
         const jsonData = xlsx.utils.sheet_to_json(
             workbook.Sheets[sheetNameList],
         );
-        jsonData.forEach(async (item) => {
+        const jsonDataStore = async (item) => {
             const {
                 name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageName,
             } = item;
             const imageLink = `img/${imageName}`;
-            await adminModel.addProduct(name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink);
+            const productDetails = [name, sku, description, price, stock, maxLimitPerOrder, categoryId, discount, sellerId, imageLink];
+            await adminModel.addProduct(productDetails);
+        };
+        jsonData.forEach((item) => {
+            jsonDataStore(item);
         });
         res.status(200).json({ success: true, message: 'Items added successfully' });
     } catch (err) {
