@@ -28,7 +28,7 @@ async function addToCart(req, res) {
         if (isPresent.length === 0) {
             const result = await customerModel.addToCart(userId, productId);
             if (result) {
-                res.status(200).json({ success: true, message: result });
+                res.status(200).json({ success: true, productDetails: result });
             } else {
                 res.status(404).json({ success: false, message: 'Error' });
             }
@@ -53,7 +53,7 @@ async function incrementItem(req, res) {
             && itemQuantity < productStock.stock) {
             const result = await customerModel.incrementItem(userId, productId);
             if (result) {
-                res.status(200).json({ success: true, message: result });
+                res.status(200).json({ success: true, data: result });
             } else {
                 res.status(404).json({ success: false, message: 'Error' });
             }
@@ -74,7 +74,7 @@ async function decrementItem(req, res) {
         if (isPresent.length > 0 && itemQuantity > 1) {
             const result = await customerModel.decrementItem(userId, productId);
             if (result) {
-                res.status(200).json({ success: true, message: result });
+                res.status(200).json({ success: true, data: result });
             } else {
                 res.status(404).json({ success: false, message: 'Error' });
             }
@@ -109,7 +109,7 @@ async function removeCartItem(req, res) {
         if (isPresent.length > 0) {
             const result = await customerModel.removeCartItem(userId, productId);
             if (result) {
-                res.status(200).json({ success: true, message: result });
+                res.status(200).json({ success: true, data: result, message: 'Removed Item' });
             } else {
                 res.status(404).json({ success: false, message: 'Error' });
             }
@@ -152,7 +152,7 @@ async function addToWishlist(req, res) {
         if (isPresent.length === 0) {
             const result = await customerModel.addToWishlist(userId, productId);
             if (result) {
-                res.status(200).json({ success: true, message: result });
+                res.status(200).json({ success: true, productDetails: result });
             } else {
                 res.status(404).json({ success: false, message: 'Error' });
             }
@@ -168,7 +168,7 @@ async function viewWishlist(req, res) {
     try {
         const { userId } = req;
         const result = await customerModel.viewWishlist(userId);
-        res.status(200).json({ success: true, cartItems: result });
+        res.status(200).json({ success: true, wishlistItems: result });
     } catch (err) {
         res.status(500).json({ success: false, error: 'Internal server error' });
     }
@@ -182,7 +182,7 @@ async function removeWishlistItem(req, res) {
         if (isPresent.length > 0) {
             const result = await customerModel.removeWishlistItem(userId, productId);
             if (result) {
-                res.status(200).json({ success: true, message: result });
+                res.status(200).json({ success: true, data: result, message: 'Removed Item' });
             } else {
                 res.status(404).json({ success: false, message: 'Error' });
             }

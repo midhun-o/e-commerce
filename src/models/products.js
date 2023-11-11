@@ -6,7 +6,7 @@ async function fetchProducts(page) {
     const connection = await makeDb();
     try {
         const fetchSkip = page * 8;
-        const query = 'SELECT p.name, p.price, pi.url, p.description FROM products p JOIN product_images pi ON p.id = pi.product_id limit ?,?';
+        const query = 'SELECT p.id,p.name, p.price, pi.url, p.description FROM products p JOIN product_images pi ON p.id = pi.product_id limit ?,?';
         const [results] = await connection.query(query, [fetchSkip, 8]);
         return results;
     } catch (error) {
