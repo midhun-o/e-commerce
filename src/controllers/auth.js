@@ -27,16 +27,16 @@ async function signup(req, res) {
     const {
         firstname, lastname, phone, email, password,
     } = req.body;
-    if (!firstname.trim() || !lastname.trim() || !phone.trim() || !email.trim() || !password.trim()) {
-        res.status(400).json({ success: false, error: 'Please fill all fields' });
+    if (!firstname.trim() || !lastname.trim() || !phone || !email.trim() || !password.trim()) {
+        res.status(401).json({ success: false, error: 'Please fill all fields' });
     } else {
         try {
             const result = await customerModel.signup(firstname, lastname, phone, email, password);
             if (result.length > 0) {
                 if (result[0].email === email) {
-                    res.status(401).json({ success: false, message: 'Email already picked' });
+                    res.status(208).json({ success: false, message: 'Email already picked' });
                 } else {
-                    res.status(401).json({ success: false, message: 'Phone number already picked' });
+                    res.status(208).json({ success: false, message: 'Phone number already picked' });
                 }
             } else {
                 res.status(201).json({ success: true, message: 'User registered successfully' });

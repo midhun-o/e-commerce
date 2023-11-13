@@ -7,7 +7,9 @@ async function addToCart(userId, productId) {
     try {
         const addItemsQuery = 'INSERT INTO cart_items (cart_id, product_id) VALUES (?, ?)';
         await connection.query(addItemsQuery, [userId, productId]);
-        return 'Added To cart';
+        const getProductsDetailsQuery = 'SELECT p.id,p.name,p.price,pi.url FROM products p join product_images pi on p.id = pi.product_id where p.id = ?';
+        const productDetails = await connection.query(getProductsDetailsQuery, [productId]);
+        return productDetails[0];
     } catch (error) {
         return false;
     } finally {
@@ -72,7 +74,9 @@ async function incrementItem(userId, productId) {
     try {
         const incrementQuery = 'UPDATE cart_items SET quantity = quantity + 1 WHERE cart_id = ? AND product_id = ?';
         await connection.query(incrementQuery, [userId, productId]);
-        return 'Incremented item quantity';
+        const getQuantityQuery = 'SELECT product_id as id,quantity FROM  cart_items  WHERE cart_id = ? AND product_id = ?';
+        const quantity = await connection.query(getQuantityQuery, [userId, productId]);
+        return quantity[0];
     } catch (error) {
         return false;
     } finally {
@@ -85,7 +89,9 @@ async function decrementItem(userId, productId) {
     try {
         const decrementQuery = 'UPDATE cart_items SET quantity = quantity - 1 WHERE cart_id = ? AND product_id = ?';
         await connection.query(decrementQuery, [userId, productId]);
-        return 'Decremented item quantity';
+        const getQuantityQuery = 'SELECT product_id as id,quantity FROM  cart_items  WHERE cart_id = ? AND product_id = ?';
+        const quantity = await connection.query(getQuantityQuery, [userId, productId]);
+        return quantity[0];
     } catch (error) {
         return false;
     } finally {
@@ -96,7 +102,7 @@ async function decrementItem(userId, productId) {
 async function viewCart(userId) {
     const connection = await makeDb();
     try {
-        const viewCartQuery = 'SELECT p.name,ci.quantity,p.price FROM cart_items ci JOIN products p ON ci.product_id = p.id WHERE ci.cart_id = ?';
+        const viewCartQuery = 'SELECT p.id,pi.url,p.name,ci.quantity,p.price FROM cart_items ci JOIN products p ON ci.product_id = p.id join product_images pi on p.id = pi.product_id WHERE ci.cart_id = ?';
         const result = await connection.query(viewCartQuery, [userId]);
         return result[0];
     } catch (error) {
@@ -111,7 +117,7 @@ async function removeCartItem(userId, productId) {
     try {
         const removeQuery = 'DELETE FROM cart_items WHERE cart_id = ? AND product_id = ?';
         await connection.query(removeQuery, [userId, productId]);
-        return 'Removed item from cart';
+        return productId;
     } catch (error) {
         return false;
     } finally {
@@ -154,7 +160,9 @@ async function addToWishlist(userId, productId) {
     try {
         const addItemsQuery = 'INSERT INTO wishlist_items (wishlist_id, product_id) VALUES (?, ?)';
         await connection.query(addItemsQuery, [userId, productId]);
-        return 'Added To Wishlist';
+        const getProductsDetailsQuery = 'SELECT p.id,p.name,p.price,pi.url FROM products p join product_images pi on p.id = pi.product_id where p.id = ?';
+        const productDetails = await connection.query(getProductsDetailsQuery, [productId]);
+        return productDetails[0];
     } catch (error) {
         return false;
     } finally {
@@ -165,7 +173,7 @@ async function addToWishlist(userId, productId) {
 async function viewWishlist(userId) {
     const connection = await makeDb();
     try {
-        const viewWishlistQuery = 'SELECT p.name,p.price FROM wishlist_items wi JOIN products p ON wi.product_id = p.id WHERE wi.wishlist_id = ?';
+        const viewWishlistQuery = 'SELECT p.id,pi.url,p.name,p.price FROM wishlist_items wi JOIN products p ON wi.product_id = p.id join product_images pi on p.id = pi.product_id WHERE wi.wishlist_id = ?';
         const result = await connection.query(viewWishlistQuery, [userId]);
         return result[0];
     } catch (error) {
@@ -180,8 +188,21 @@ async function removeWishlistItem(userId, productId) {
     try {
         const decrementQuery = 'DELETE FROM wishlist_items WHERE wishlist_id = ? AND product_id = ?';
         await connection.query(decrementQuery, [userId, productId]);
-        return 'Removed item from wishlist';
+        return productId;
     } catch (error) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
+async function fetchBannerImage() {
+    const connection = await makeDb();
+    try {
+        const fetchBannerImageQuery = 'select id,title,image_url FROM banner_image';
+        const result = await connection.query(fetchBannerImageQuery);
+        return result;
+    } catch (err) {
         return false;
     } finally {
         connection.end();
@@ -203,4 +224,5 @@ module.exports = {
     viewWishlist,
     isPresentInWishlist,
     removeWishlistItem,
+    fetchBannerImage,
 };
