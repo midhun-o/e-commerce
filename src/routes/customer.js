@@ -14,5 +14,6 @@ router.post('/checkout/', authMiddleware.verifyToken, customerController.checkou
 router.post('/addtowishlist/:id', authMiddleware.verifyToken, customerController.addToWishlist);
 router.get('/wishlist/', authMiddleware.verifyToken, customerController.viewWishlist);
 router.post('/removewishlist/:id', authMiddleware.verifyToken, customerController.removeWishlistItem);
+router.get('/fetchBannerImages', authMiddleware.verifyToken, customerController.fetchBannerImage);
 
 module.exports = router;

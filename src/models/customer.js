@@ -196,6 +196,19 @@ async function removeWishlistItem(userId, productId) {
     }
 }
 
+async function fetchBannerImage() {
+    const connection = await makeDb();
+    try {
+        const fetchBannerImageQuery = 'select id,title,image_url FROM banner_image';
+        const result = await connection.query(fetchBannerImageQuery);
+        return result;
+    } catch (err) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
 module.exports = {
     addToCart,
     isPresentInCart,
@@ -211,4 +224,5 @@ module.exports = {
     viewWishlist,
     isPresentInWishlist,
     removeWishlistItem,
+    fetchBannerImage,
 };

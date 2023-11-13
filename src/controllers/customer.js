@@ -194,6 +194,19 @@ async function removeWishlistItem(req, res) {
     }
 }
 
+async function fetchBannerImage(req, res) {
+    try {
+        const result = await customerModel.fetchBannerImage();
+        if (result) {
+            res.status(200).json({ success: true, message: result[0] });
+        } else {
+            res.status(404).json({ success: false, message: 'Something went wrong' });
+        }
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+}
+
 module.exports = {
     addToCart,
     incrementItem,
@@ -204,4 +217,5 @@ module.exports = {
     addToWishlist,
     viewWishlist,
     removeWishlistItem,
+    fetchBannerImage,
 };
