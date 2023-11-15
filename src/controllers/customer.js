@@ -103,7 +103,7 @@ async function viewCart(req, res) {
 
 async function removeCartItem(req, res) {
     try {
-        const productId = req.params.id;
+        const productId = Number(req.params.id);
         const { userId } = req;
         const isPresent = await isPresentInCart(userId, productId);
         if (isPresent.length > 0) {
@@ -176,7 +176,7 @@ async function viewWishlist(req, res) {
 
 async function removeWishlistItem(req, res) {
     try {
-        const productId = req.params.id;
+        const productId = Number(req.params.id);
         const { userId } = req;
         const isPresent = await isPresentInWishlist(userId, productId);
         if (isPresent.length > 0) {
