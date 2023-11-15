@@ -138,13 +138,40 @@ async function deleteProduct(productId) {
     }
 }
 
-async function fetchProducts(pageNumber) {
+async function fetchProducts() {
     const connection = await makeDb();
     try {
-        const limitNumber = pageNumber * 5;
-        const query = 'SELECT p.id AS id,pi.url AS image,p.name AS name,p.sku AS sku,c.name AS category,p.price AS price,p.stock AS stock,p.status AS status,p.max_limit_per_order AS maxLimit,p.discount AS discount,s.name AS seller,CONCAT_WS(" ",DAY(p.created),MONTHNAME(p.created),YEAR(p.created)) AS addedDate FROM products p JOIN product_images pi ON p.id = pi.product_id JOIN category c on c.id = p.category_id JOIN seller s ON p.seller_id = s.id order by p.created desc limit ?, ?';
-        const [results] = await connection.query(query, [limitNumber, 5]);
+        const query = 'SELECT p.id AS id,pi.url AS image,p.name AS name,p.sku AS sku,c.name AS category,p.price AS price,p.stock AS stock,p.status AS status,p.max_limit_per_order AS maxLimit,p.discount AS discount,s.name AS seller,CONCAT_WS(" ",DAY(p.created),MONTHNAME(p.created),YEAR(p.created)) AS addedDate FROM products p JOIN product_images pi ON p.id = pi.product_id JOIN category c on c.id = p.category_id JOIN seller s ON p.seller_id = s.id order by p.created desc';
+        const [results] = await connection.query(query);
         return results;
+    } catch (error) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
+async function fetchProductById(productId) {
+    const connection = await makeDb();
+    try {
+        const query = 'SELECT * FROM products p JOIN product_images pi ON p.id = pi.product_id JOIN category c on c.id = p.category_id JOIN seller s ON p.seller_id = s.id WHERE p.id = ?';
+        const [results] = await connection.query(query, [productId]);
+        return results;
+    } catch (error) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
+async function getSellerAndCategory() {
+    const connection = await makeDb();
+    try {
+        const sellerQuery = 'SELECT id,name FROM seller;';
+        const [seller] = await connection.query(sellerQuery);
+        const categoryQuery = 'SELECT id,name FROM category;';
+        const [category] = await connection.query(categoryQuery);
+        return [seller, category];
     } catch (error) {
         return false;
     } finally {
@@ -171,5 +198,5 @@ async function addUser(username, password, email) {
 }
 
 module.exports = {
-    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage, fetchProducts, addUser,
+    fetchProductById, getSellerAndCategory, addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage, fetchProducts, addUser,
 };

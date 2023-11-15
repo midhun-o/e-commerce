@@ -146,10 +146,28 @@ async function deleteProduct(req, res) {
     }
 }
 
+async function getSellerAndCategory(req, res) {
+    try {
+        const result = await adminModel.getSellerAndCategory();
+        res.status(200).json({ success: true, products: result });
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+}
+
 async function fetchProducts(req, res) {
     try {
-        const pageNumber = req.query.page;
-        const result = await adminModel.fetchProducts(pageNumber);
+        const result = await adminModel.fetchProducts();
+        res.status(200).json({ success: true, products: result });
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+}
+
+async function fetchProductById(req, res) {
+    try {
+        const productId = req.params.id;
+        const result = await adminModel.fetchProductById(productId);
         res.status(200).json({ success: true, products: result });
     } catch (err) {
         res.status(500).json({ success: false, error: 'Internal server error' });
@@ -206,5 +224,5 @@ async function addUser(req, res) {
 }
 
 module.exports = {
-    addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage, fetchProducts, addProductFromExcel, addUser,
+    fetchProductById, getSellerAndCategory, addProduct, updateProduct, deleteProduct, viewRoles, addRoles, removeRoles, addBannerImage, deleteBannerImage, fetchBannerImage, fetchProducts, addProductFromExcel, addUser,
 };

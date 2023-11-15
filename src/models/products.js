@@ -19,7 +19,7 @@ async function fetchProducts(page) {
 async function fetchProductById(productId) {
     const connection = await makeDb();
     try {
-        const query = 'SELECT * FROM products p JOIN product_images pi ON p.id = pi.product_id WHERE p.id = ?';
+        const query = 'SELECT p.name,p.description,p.price,c.name AS category,pi.url,s.name AS seller FROM products p JOIN product_images pi ON p.id = pi.product_id JOIN category c on p.category_id = c.id JOIN seller s on p.seller_id = s.id WHERE p.id = ?';
         const [results] = await connection.query(query, [productId]);
         if (results.length > 0) {
             return results[0];

@@ -117,7 +117,7 @@ async function removeCartItem(userId, productId) {
     try {
         const removeQuery = 'DELETE FROM cart_items WHERE cart_id = ? AND product_id = ?';
         await connection.query(removeQuery, [userId, productId]);
-        return productId;
+        return { id: productId };
     } catch (error) {
         return false;
     } finally {
@@ -188,7 +188,7 @@ async function removeWishlistItem(userId, productId) {
     try {
         const decrementQuery = 'DELETE FROM wishlist_items WHERE wishlist_id = ? AND product_id = ?';
         await connection.query(decrementQuery, [userId, productId]);
-        return productId;
+        return { id: productId };
     } catch (error) {
         return false;
     } finally {
