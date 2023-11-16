@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable max-len */
 const productsModel = require('../models/products');
 
 async function fetchProducts(req, res) {
@@ -19,6 +20,35 @@ async function fetchProductById(req, res) {
             res.status(200).json({ success: true, product: result });
         } else {
             res.status(404).json({ success: false, message: 'Product not found' });
+        }
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+}
+
+async function searchProduct(req, res) {
+    try {
+        const {
+            page, category, search, sort, type,
+        } = req.query;
+        const result = await productsModel.searchProduct(search, page, Number(category), sort, type);
+        if (result) {
+            res.status(200).json({ success: true, product: result[0], productCount: result[1] });
+        } else {
+            res.status(404).json({ success: false, message: 'Product not found' });
+        }
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+}
+
+async function getCategories(req, res) {
+    try {
+        const result = await productsModel.getCategories();
+        if (result) {
+            res.status(200).json({ success: true, category: result });
+        } else {
+            res.status(404).json({ success: false, message: 'Categories not found' });
         }
     } catch (err) {
         res.status(500).json({ success: false, error: 'Internal server error' });
@@ -47,4 +77,6 @@ async function fetchCategoryAndProducts(req, res) {
     }
 }
 
-module.exports = { fetchProducts, fetchProductById, fetchCategoryAndProducts };
+module.exports = {
+    getCategories, searchProduct, fetchProducts, fetchProductById, fetchCategoryAndProducts,
+};
