@@ -16,6 +16,19 @@ async function fetchProducts(page) {
     }
 }
 
+async function getCategories() {
+    const connection = await makeDb();
+    try {
+        const query = 'SELECT id, name FROM category WHERE parent_id != ""';
+        const [results] = await connection.query(query);
+        return results;
+    } catch (error) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
 async function fetchProductById(productId) {
     const connection = await makeDb();
     try {
@@ -25,6 +38,46 @@ async function fetchProductById(productId) {
             return results[0];
         } else {
             return false;
+        }
+    } catch (error) {
+        return false;
+    } finally {
+        connection.end();
+    }
+}
+
+async function searchProduct(searchString, pageNumber, category, sortValue, sortType) {
+    const connection = await makeDb();
+    try {
+        const fetchSkip = pageNumber * 8;
+        if (category === 0) {
+            if (sortType === 'low') {
+                const query = 'SELECT p.id,p.name, p.price, pi.url, p.description,c.name AS category FROM products p JOIN product_images pi ON p.id = pi.product_id JOIN category c ON p.category_id = c.id WHERE p.name like ? ORDER BY ?? limit ?,?';
+                const [results] = await connection.query(query, [`%${searchString}%`, sortValue, fetchSkip, 8]);
+                const pageQuery = 'SELECT COUNT(id) AS count FROM products WHERE name like ?';
+                const [count] = await connection.query(pageQuery, [`%${searchString}%`]);
+                return [results, count[0].count];
+            } else {
+                const query = 'SELECT p.id,p.name, p.price, pi.url, p.description,c.name AS category FROM products p JOIN product_images pi ON p.id = pi.product_id JOIN category c ON p.category_id = c.id WHERE p.name like ? ORDER BY ?? desc limit ?,?';
+                const [results] = await connection.query(query, [`%${searchString}%`, sortValue, fetchSkip, 8]);
+                const pageQuery = 'SELECT COUNT(id) AS count FROM products WHERE name like ?';
+                const [count] = await connection.query(pageQuery, [`%${searchString}%`]);
+                return [results, count[0].count];
+            }
+        } else if (category !== 0) {
+            if (sortType === 'low') {
+                const query = 'SELECT p.id,p.name, p.price, pi.url, p.description,c.name AS category FROM products p JOIN product_images pi ON p.id = pi.product_id JOIN category c ON p.category_id = c.id WHERE c.id = ? AND p.name like ? ORDER BY ?? limit ?,?';
+                const [results] = await connection.query(query, [category, `%${searchString}%`, sortValue, fetchSkip, 8]);
+                const pageQuery = 'SELECT COUNT(id) AS count FROM products WHERE category_id = ? AND name like ?';
+                const [count] = await connection.query(pageQuery, [category, `%${searchString}%`]);
+                return [results, count[0].count];
+            } else {
+                const query = 'SELECT p.id,p.name, p.price, pi.url, p.description,c.name AS category FROM products p JOIN product_images pi ON p.id = pi.product_id JOIN category c ON p.category_id = c.id WHERE c.id = ? AND p.name like ? ORDER BY ?? desc limit ?,?';
+                const [results] = await connection.query(query, [category, `%${searchString}%`, sortValue, fetchSkip, 8]);
+                const pageQuery = 'SELECT COUNT(id) AS count FROM products WHERE category_id = ? AND name like ?';
+                const [count] = await connection.query(pageQuery, [category, `%${searchString}%`]);
+                return [results, count[0].count];
+            }
         }
     } catch (error) {
         return false;
@@ -50,4 +103,6 @@ async function fetchCategoryAndProducts() {
     }
 }
 
-module.exports = { fetchProducts, fetchProductById, fetchCategoryAndProducts };
+module.exports = {
+    getCategories, searchProduct, fetchProducts, fetchProductById, fetchCategoryAndProducts,
+};

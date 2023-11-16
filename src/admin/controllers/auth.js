@@ -9,7 +9,6 @@ async function adminLogin(req, res) {
         return res.status(400).json({ success: false, message: 'Email or Password cannot be empty' });
     }
     try {
-        console.log('hi');
         const result = await adminModel.adminLogin(email, password);
         if (result.length === 1) {
             const jwtToken = token.generateToken(result[0]);
